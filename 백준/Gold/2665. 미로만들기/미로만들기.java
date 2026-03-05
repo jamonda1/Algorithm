@@ -58,7 +58,7 @@ public class Main {
 			if(cnt > dist[x][y]) continue; // 지금 값이 기존보다 크면 필요없다.
 			if(x == N - 1 && y == N - 1) {
 				result = cnt;
-				continue;
+				break;
 			}
 			
 			for(int i = 0; i < 4; i++) {
