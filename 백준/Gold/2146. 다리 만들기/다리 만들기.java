@@ -55,7 +55,7 @@ public class Main {
 						int[] currL = list.get(k).get(l);
 						int len = Math.abs(currJ[0] - currL[0]) + Math.abs(currJ[1] - currL[1]);
 						min = Math.min(min, len);
-						if(min == 1) break first;
+						if(min == 2) break first;
 					}
 				}
 			}
