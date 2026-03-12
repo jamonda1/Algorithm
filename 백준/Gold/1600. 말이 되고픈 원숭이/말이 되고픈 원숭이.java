@@ -39,7 +39,6 @@ public class Main {
 		visited[K][0][0] = true; // [1][][] 부분은 말 이동하면 체크
 		
 		int result = Integer.MAX_VALUE;
-		boolean f = false;
 		while(!queue.isEmpty()) {
 			int[] curr = queue.poll();
 			int x = curr[0];
@@ -49,12 +48,11 @@ public class Main {
 			
 			if(cnt > result) continue;
 			if(x == H - 1 && y == W - 1) {
-				result = cnt;
-				f = true;
-				continue;
+				System.out.println(cnt);
+				return;
 			}
 			
-			for(int i = 0; i < 4; i++) {
+			for(int i = 0; i < 4; i++) { // 4방으로 이동할 때
 				int tx = x + dr[i];
 				int ty = y + dc[i];
 				int tcnt = cnt + 1;
@@ -66,7 +64,7 @@ public class Main {
 				queue.add(new int[] {tx, ty, tcnt, k});
 			}
 			
-			if(k > 0) {
+			if(k > 0) { // 찬스가 있으면 말처럼 이동했을 때
 				for(int i = 0; i < 8; i++) {
 					int tx = x + hr[i];
 					int ty = y + hc[i];
@@ -81,6 +79,6 @@ public class Main {
 			}
 		}
 		
-		System.out.println(f ? result : -1);
+		System.out.println(-1);
 	}
 }
