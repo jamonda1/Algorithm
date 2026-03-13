@@ -38,13 +38,15 @@ class Solution {
 		
 		queue.add(new int[] {1, 0});
 		dist[1] = 0;
-		
+        
+		int count = 0;
 		while(!queue.isEmpty()) {
 			int[] curr = queue.poll();
 			int x = curr[0];
 			int time = curr[1];
 			
 			if(time > dist[x]) continue;
+			if(time <= K) count++;
 			
 			for(int[] next : list[x]) {
 				int nx = next[0];
@@ -54,11 +56,6 @@ class Solution {
 				dist[nx] = nc;
 				queue.add(new int[] {nx, nc});
 			}
-		}
-		
-		int count = 0;
-		for(int i = 1; i <= N; i++) {
-			if(dist[i] <= K) count++;
 		}
 		
 		return count;
