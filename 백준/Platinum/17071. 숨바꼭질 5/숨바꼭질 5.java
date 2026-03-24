@@ -80,8 +80,7 @@ public class Main {
         int result = size * 2;
         for(int i = K; i < size; i++) {
         	for(int j = 0; j < 2; j++) {
-        		if(sister[i] != -1 && sister[i] >= dist[j][i] && checkTime(sister[i], dist[j][i], j, i)) {
-//                	System.out.println(i + " 동생" + sister[i] + " / 수빈" + dist[i]);
+        		if(sister[i] != -1 && sister[i] >= dist[j][i] && checkTime(sister[i] - dist[j][i])) {
                     result = Math.min(result, sister[i]);
                 }
         	}
@@ -89,14 +88,8 @@ public class Main {
         
         System.out.println(result == (size * 2) ? -1 : result);
     }
-    private static boolean checkTime(int sister, int subin, int j, int i) {
-//    	System.out.println(i + " 동생" + sister + " / 수빈" + subin);
-        int pivot = sister - subin;
-        if(pivot % 2 == 0) return true;        	
-//        if(j == 0) {
-//        } else {
-//        	if(pivot % 2 == 1) return true; 
-//        }
+    private static boolean checkTime(int pivot) {
+        if(pivot % 2 == 0) return true;
         return false;
     }
 }
