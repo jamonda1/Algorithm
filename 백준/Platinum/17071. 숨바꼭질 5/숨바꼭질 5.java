@@ -2,7 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 /*
  * 수빈이는 동생과 숨바꼭질을 하고 있다. 수빈이는 1초마다 X-1 또는 X+1로 움직인다. 그리고 X*2로 순간이동도 가능하다.
@@ -46,7 +47,7 @@ public class Main {
             sum += ++time;
         }
 
-        PriorityQueue<Node> pq = new PriorityQueue<>();
+        Queue<Node> queue = new LinkedList<>();
         
         int[] d = {-1, 1};
         int[][] dist = new int[2][size];
@@ -54,11 +55,11 @@ public class Main {
         	Arrays.fill(dist[i], Integer.MAX_VALUE);        	
         }
         
-        pq.add(new Node(N, 0)); // 초기값 설정
+        queue.add(new Node(N, 0)); // 초기값 설정
         dist[0][N] = 0;
         
-        while(!pq.isEmpty()) {
-            Node curr = pq.poll();
+        while(!queue.isEmpty()) { // 짝수 시간일 때 갈 수 있는 곳과 홀수 시간일 때 갈 수 있는 곳 분리
+            Node curr = queue.poll();
             int x = curr.x;
             int t = curr.t;
             
@@ -73,7 +74,7 @@ public class Main {
                 if(tt >= dist[tf][tx]) continue;
                 
                 dist[tf][tx] = tt;
-                pq.add(new Node(tx, tt));
+                queue.add(new Node(tx, tt));
             }
         } // 각각의 위치로 최단거리 이동 완료
         
