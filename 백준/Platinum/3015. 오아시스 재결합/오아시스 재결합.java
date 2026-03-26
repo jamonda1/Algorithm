@@ -27,9 +27,7 @@ public class Main {
         Stack<Tall> stack = new Stack<>();
         
         long result = 0;
-        int max = 0;
         for(int i = 0; i < N; i++) {
-        	max = Math.max(max, people[i]); // 해당 스택에서 가장 높은 키 저장
         	int cnt = 1;
         	
         	while(!stack.isEmpty()) {
