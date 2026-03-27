@@ -10,6 +10,7 @@ public class Main {
 	
 	static int R, C, count = 0;
 	static boolean f = false;
+	static int[] dr = {0, 0, 1, 1}, dc = {0, 1, 0, 1};
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,42 +26,29 @@ public class Main {
 		
 		int size = (int) Math.pow(2, N);
 		
-		devide(0, 0, size, size);
+		devide(0, 0, size);
 	}
 	
-	static void devide(int sx, int sy, int ex, int ey) {
-		if(ex - sx == 2) {
-			for(int i = sx; i < ex; i++) {
-				for(int j = sy; j < ey; j++) {
-					if(i == R && j == C) {
-						System.out.println(count);
-						f = true;
-						return;
-					} count++;
-				}
+	static void devide(int sx, int sy, int size) {
+		if(size == 2) { // 재귀 타고 들어와서 size = 2가 되면 탐색
+			for(int i = 0; i < 4; i++) {
+				if(sx + dr[i] == R && sy + dc[i] == C) {
+					System.out.println(count);
+					f = true; // 목표를 찾았으면 출력
+					return;
+				} count++;
 			} // 탐색 종료
 			return;
 		}
 		
-		int tx = (sx + ex) / 2;
-		int ty = (sy + ey) / 2;
+		int ns = size / 2;
+		int[] nx = {sx, sx, sx + ns, sx + ns}; // 다음 재귀에서의 x 범위
+		int[] ny = {sy, sy + ns, sy, sy + ns}; // 다음 재귀에서의 y 범위
 		
-		// R이랑 C가 범위 안에 있는지 확인
-		// 범위 안에 있으면 재귀 들어가기, 범위 안에 없으면 ex - sx * 2를 더해주기
-		if(sx <= R && R < tx && sy <= C && C < ty) {
-			devide(sx, sy, tx, ty); // 1번
-		} else if(!f) count += (tx - sx) * (tx - sx);
-		
-		if(sx <= R && R < tx && ty <= C && C < ey) {
-			devide(sx, ty, tx, ey); // 2번
-		} else if(!f) count += (tx - sx) * (tx - sx);
-		
-		if(tx <= R && R < ex && sy <= C && C < ty) {
-			devide(tx, sy, ex, ty); // 3번
-		} else if(!f) count += (ex - tx) * (ex - tx);
-		
-		if(tx <= R && R < ex && ty <= C && C < ey) {
-			devide(tx, ty, ex, ey); // 4번
-		} else if(!f) count += (ex - tx) * (ex - tx);
+		for(int i = 0; i < 4; i++) {
+			if(nx[i] <= R && R < nx[i] + ns && ny[i] <= C && C < ny[i] + ns) {
+				devide(nx[i], ny[i], size / 2); // 1번
+			} else if(!f) count += ns * ns;
+		}
 	}
 }
