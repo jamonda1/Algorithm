@@ -5,12 +5,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 import java.util.StringTokenizer;
 /*
  * [거의 최단 경로]란 최단 경로에 포함되지 않은 길로만 이루어진 경로 중의 최단 경로를 말한다.
@@ -30,6 +28,7 @@ public class Main {
 		} // 오름차순
 	}
 	static int N, M, S, D, MAX = Integer.MAX_VALUE;
+	static Queue<Integer> queue = new LinkedList<>();
 	static PriorityQueue<Node> pq = new PriorityQueue<>();
 	
 	public static void main(String[] args) throws IOException {
@@ -91,15 +90,15 @@ public class Main {
 				}
 			} // 다익스트라 종료
 
-			Set<Integer>[] hs = find(pass);
+			boolean[][] visited = find(pass);
 
-			int result = go(graph, hs);
+			int result = go(graph, visited);
 			bw.write(result + "\n");
 		} // 전체 테스트 케이스 종료
 		bw.close();
 	}
 
-	private static int go(List<Node>[] graph, Set<Integer>[] hs) {
+	private static int go(List<Node>[] graph, boolean[][] visited) {
 		pq.clear();
 		int[] dist = new int[N];
 		Arrays.fill(dist, MAX);
@@ -117,7 +116,7 @@ public class Main {
 			
 			for(Node n : graph[x]) {
 				int tw = w + n.w;
-				if(hs[x].contains(n.x) || tw >= dist[n.x]) continue;
+				if(visited[x][n.x] || tw >= dist[n.x]) continue;
 				
 				dist[n.x] = tw;
 				pq.add(new Node(n.x, tw));
@@ -127,12 +126,9 @@ public class Main {
 		return -1; // 여기까지 오면 거최경 x
 	}
 
-	private static Set<Integer>[] find(List<Integer>[] pass) {
-		Set<Integer>[] hs = new HashSet[N];
-		for(int i = 0; i < N; i++) hs[i] = new HashSet<>();
-		Queue<Integer> queue = new LinkedList<>();
+	private static boolean[][] find(List<Integer>[] pass) {
 		boolean[][] visited = new boolean[N][N];
-		
+		queue.clear();
 		queue.add(D);
 		
 		while(!queue.isEmpty()) { // 최단 경로만 뽑아서 저장
@@ -141,10 +137,9 @@ public class Main {
 			for(int n : pass[x]) {
 				if(visited[n][x]) continue;
 				visited[n][x] = true;
-				hs[n].add(x);
 				queue.add(n);
 			}
 		}
-		return hs;
+		return visited;
 	}
 }
