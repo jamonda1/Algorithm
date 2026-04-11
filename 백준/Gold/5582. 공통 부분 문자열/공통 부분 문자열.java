@@ -8,11 +8,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String str1 = br.readLine();
-        String str2 = br.readLine();
-
-        char[] A = (" " + str1).toCharArray(); // 문자열을 배열로 변경
-        char[] B = (" " + str2).toCharArray();
+        char[] A = (" " + br.readLine()).toCharArray(); // 문자열을 배열로 변경
+        char[] B = (" " + br.readLine()).toCharArray();
 
         int[][] dp = new int[A.length][B.length];
 
