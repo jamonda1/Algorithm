@@ -20,7 +20,7 @@ public class Main {
             return Long.compare(this.w, o.w);
         }
     }
-	static final long INF = 1_200_000_000_000_000_000L; // 가능한 최댓값은 1000억이니 넉넉하게 1조
+	static final long INF = 1_000_000_000_000L; // 가능한 최댓값은 1000억이니 넉넉하게 1조
 	static int N, P, z;
 	static List<Node>[] graph;
 	static int[] point;
