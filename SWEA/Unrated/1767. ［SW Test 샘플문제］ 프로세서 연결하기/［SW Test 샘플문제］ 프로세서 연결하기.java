@@ -9,8 +9,8 @@ public class Solution {
 	
 	static int N, cnt, max, min;
 	static char[][] map = new char[12][12];
-	static int[] x = new int[13]; // 코어의 x좌표
-	static int[] y = new int[13]; // 코어의 y좌표
+	static int[] x = new int[12]; // 코어의 x좌표
+	static int[] y = new int[12]; // 코어의 y좌표
 	static int[] dr = {-1, 1, 0, 0}, dc = {0, 0, -1, 1};
 	
 	public static void main(String[] args) throws IOException {
@@ -18,11 +18,11 @@ public class Solution {
 		StringBuilder sb = new StringBuilder();
 		StringTokenizer st;
 		
-		int TC = Integer.parseInt(br.readLine().trim());
+		int TC = Integer.parseInt(br.readLine());
 		for(int tc = 1; tc <= TC; tc++) {
 			cnt = 0; max = 0; min = 9999; // 케이스 시작 전 초기화
 			
-			N = Integer.parseInt(br.readLine().trim()); // 맵의 크기 N
+			N = Integer.parseInt(br.readLine()); // 맵의 크기 N
 			
 			for(int i = 0; i < N; i++) {
 				st = new StringTokenizer(br.readLine());
