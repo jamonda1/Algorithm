@@ -1,86 +1,89 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
- 
+import java.io.*;
+
 public class Solution {
-     
-    static int N, tc, cnt;
-    static char[][] map = new char[300][300];
-    static int[][] visited;
-    static int[] qx = new int[300*300]; // x좌표 저장할 큐
-    static int[] qy = new int[300*300]; // y좌표 저장할 큐
-    static int[] dr = {-1, 1, 0, 0, -1, -1, 1, 1}, dc = {0, 0, -1, 1, -1, 1, -1, 1};
-     
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-         
-        int TC = Integer.parseInt(br.readLine());
-        visited = new int[300][300];
-         
-        for(tc = 1; tc <= TC; tc++) {
-             
-            N = Integer.parseInt(br.readLine()); // 맵의 크기 N
-             
-            cnt = 0;
-            for(int i = 0; i < N; i++) {
-                char[] input = br.readLine().toCharArray();
-                for(int j = 0; j < N; j++) {
-                    map[i][j] = input[j];
-                    if(map[i][j] == '.') cnt++;
-                }
-            } // 맵 입력 완료
-             
-            int result = 0;
-            for(int i = 0; i < N; i++) {
-                for(int j = 0; j < N; j++) {
-                    if(map[i][j] == '*' || visited[i][j] == tc || !check(i, j)) continue;
-                    bfs(i, j); // 지뢰가 아니고, 방문도 안 했으면 bfs 시작
-                    result++;
-                    cnt--;
-                }
-            }
-             
-            sb.append("#").append(tc).append(" ").append(result+cnt).append("\n");
-             
-        } // 전체 테스트 케이스 종료
-        System.out.println(sb);
-    }
-     
-    private static void bfs(int sx, int sy) { // 연쇄 클릭 메서드
-        int h = 0, t = 1; // head가 삭제, tail이 삽입
-         
-        qx[h] = sx; qy[h] = sy; // 초기값 삽입
-        visited[sx][sy] = tc;
-         
-        while(h != t) { // head와 tail이 같아지면 큐가 비어있는 것
-            int x = qx[h];
-            int y = qy[h++];
-             
-            for(int i = 0; i < 8; i++) {
-                int tx = x + dr[i];
-                int ty = y + dc[i];
-                // 범위 밖, 방문, 지뢰일 경우 패스
-                if(tx < 0 || N <= tx || ty < 0 || N <= ty || visited[tx][ty] == tc || map[tx][ty] == '*') continue;
-                if(check(tx, ty)) { // 다음칸의 주변 8방에 지뢰가 없을 때만 큐에 넣기
-                    qx[t] = tx;
-                    qy[t++] = ty;
-                }
-                visited[tx][ty] = tc; // 방문 처리는 무조건
-                cnt--;
-            }
-        }
-    }
-     
-    private static boolean check(int sx, int sy) { //주변에 지뢰가 없으면 true 리턴
-        for(int i = 0; i < 8; i++) {
-            int tx = sx + dr[i];
-            int ty = sy + dc[i];
-             
-            if(tx < 0 || N <= tx || ty < 0 || N <= ty) continue;
-            if(map[tx][ty] == '*') return false;
-        }
-         
-        return true;
-    }
+	
+	static int N;
+	static char[][] map = new char[301][301];
+	static boolean[][] visited;
+	static int[] xq = new int[300 * 300];
+	static int[] yq = new int[300 * 300];
+	static int[] dr = {-1, 1, 0, 0, -1, -1, 1, 1}, dc = {0, 0, -1, 1, -1, 1, -1, 1};
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		
+		int TC = Integer.parseInt(br.readLine());
+		for(int tc = 1; tc <= TC; tc++) {
+			
+			N = Integer.parseInt(br.readLine()); // 맵의 크기 N
+			
+			for(int i = 0; i < N; i++) {
+				String input = br.readLine();
+				for(int j = 0; j < N; j++) {
+					map[i][j] = input.charAt(j);
+				}
+			} // 지뢰 정보 입력 완료
+			
+			visited = new boolean[N][N];
+			
+			int result = 0;
+			for(int i = 0; i < N; i++) {
+				for(int j = 0; j < N; j++) {
+					if(!visited[i][j] && map[i][j] == '.' && mineCheck(i, j)) {
+						bfs(i, j); // 주변에 지뢰가 하나도 없으면 연쇄 클릭 시작
+						result++;
+					}
+				}
+			}
+			
+			for(int i = 0; i < N; i++) { // 연쇄클릭 후에 남은 방문 안 된 .들 카운트
+				for(int j = 0; j < N; j++) {
+					if(map[i][j] == '.' && !visited[i][j]) result++;
+				}
+			}
+			
+			sb.append("#").append(tc).append(" ").append(result).append("\n");
+		}
+		System.out.print(sb);
+	}
+	
+	static void bfs(int sx, int sy) {
+		visited[sx][sy] = true;
+		
+		int h = 0, t = 0;
+		xq[t] = sx;
+		yq[t++] = sy;
+		
+		while(h != t) {
+			int x = xq[h];
+			int y = yq[h++];
+			
+			for(int i = 0; i < 8; i++) { // 8방 탐색
+				int tx = x + dr[i];
+				int ty = y + dc[i];
+				
+				if(checkAround(tx, ty)) continue;
+				visited[tx][ty] = true; // 범위 안이면 방문처리
+				
+				if(!mineCheck(tx, ty)) continue; // 주변에 지뢰가 있으면 큐x
+				xq[t] = tx; // 주변에 지뢰가 없는 것만 큐에 다시 넣기
+				yq[t++] = ty;
+			}
+		}
+	}
+	
+	static boolean mineCheck(int x, int y) { // (x, y)의 8방에 지뢰가 있으면 false, 없으면 true
+		for(int i = 0; i < 8; i++) {
+			int tx = x + dr[i];
+			int ty = y + dc[i];
+			if(checkAround(tx, ty)) continue;
+			if(map[tx][ty] == '*') return false;
+		}
+		return true;
+	}
+	
+	static boolean checkAround(int x, int y) { // 범위와 방문 확인 체크 메서드
+		return (x < 0 || N <= x || y < 0 || N <= y || visited[x][y]);
+	}
 }
